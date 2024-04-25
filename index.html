@@ -9,23 +9,48 @@
     <title>City Weather</title>
 
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://kit.fontawesome.com/d55684f920.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div id="map"></div>
-
+    <div class="weather-container">
+        <div class="weather">
+            <div class="image" id="image"></div>
+            <div class="text" id="text"></div>
+            <div class="city" id="city">Nie wybrano</div>
+            <div class="date" id="date"></div>
+        </div>
+    </div>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
 </body>
 <script>
-    var map = L.map('map').setView([52.2297, 21.0122], 13);
+    var map = L.map('map').setView([52, 19], 7);
+    var cityElement = document.getElementById('city');
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     function onMapClick(e) {
-        alert("Kliknięto na współrzędnych: " + e.latlng);
+        var latlng = e.latlng;
+        var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                var city = data.address.city;
+                if (!city) {
+                    city = data.address.town || data.address.village || data.address.hamlet;
+                }
+                cityElement.textContent = city;
+            })
     }
+
     map.on('click', onMapClick);
 </script>
 </html>

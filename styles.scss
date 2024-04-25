@@ -2,8 +2,27 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-#map {
-  height: 400px;
+body {
+  max-height: 100dvh;
 }
+
+.weather-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  #map {
+    height: 60dvh;
+    width: 60dvw;
+  }
+}
+
+
