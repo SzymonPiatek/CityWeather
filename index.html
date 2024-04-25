@@ -27,16 +27,10 @@
                 <div id="weekday"></div>
             </div>
         </div>
-        <div class="time_weather">
-            <div id="temperature">
-                <div class="temperature">
-                    10°C
-                </div>
-            </div>
-            <div id="time">
-                <div class="time">
-                    12:00
-                </div>
+        <div class="time_weather" id="timeWeather">
+            <div class="item">
+                <div class="temperature">0°C</div>
+                <div class="time">12:00</div>
             </div>
         </div>
         <div class="map">
@@ -45,83 +39,88 @@
     </main>
 </body>
 <script>
-<!--  TodayDate  -->
     function formatDate(date) {
-        var day = date.getDate();
-        var month = date.getMonth() + 1;
-        var year = date.getFullYear();
-
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
         return day + "." + month + "." + year;
     }
 
     function getPolishDayOfWeek(date) {
-        var options = { weekday: 'long', timeZone: 'UTC', locale: 'pl-PL' };
+        const options = {weekday: 'long', timeZone: 'UTC', locale: 'pl-PL'};
         return date.toLocaleDateString('pl-PL', options);
     }
 
-    var today = new Date();
-    var formatted_today = formatDate(today);
-    var weekday = getPolishDayOfWeek(today);
-    var dateElement = document.getElementById('date');
-    var weekdayElement = document.getElementById('weekday');
+    const today = new Date();
+    const formatted_today = formatDate(today);
+    const weekday = getPolishDayOfWeek(today);
+    const dateElement = document.getElementById('date');
+    const weekdayElement = document.getElementById('weekday');
 
     dateElement.textContent = formatted_today;
     weekdayElement.textContent = weekday;
 
-    console.log(formatted_today);
-<!--  Map  -->
-    var map = L.map('map').setView([52, 19], 7);
-    var cityElement = document.getElementById('city');
+    const map = L.map('map').setView([52, 19], 7);
+    const cityElement = document.getElementById('city');
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     function onMapClick(e) {
-        var latlng = e.latlng;
-        var city_url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
+        const latlng = e.latlng;
+        const city_url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
 
         fetch(city_url)
             .then(response => response.json())
             .then(data => {
-                var city = data.address.city;
+                let city = data.address.city;
                 if (!city) {
                     city = data.address.town || data.address.village || data.address.hamlet;
                 }
                 cityElement.textContent = city || "Nie wybrano";
             })
 
-        var weather_url = 'https://api.open-meteo.com/v1/forecast';
-        var latitude = 'latitude=' + latlng.lat;
-        var longitude = 'longitude=' + latlng.lng;
-        var hourly = 'hourly=temperature_2m';
-        var complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly;
+        const weather_url = 'https://api.open-meteo.com/v1/forecast';
+        const latitude = 'latitude=' + latlng.lat;
+        const longitude = 'longitude=' + latlng.lng;
+        const hourly = 'hourly=temperature_2m';
+        const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly;
 
         fetch(complete_weather_url)
             .then(response => response.json())
             .then(data => {
-                var times = data.hourly.time;
-                var temperatures = data.hourly.temperature_2m;
-                var timeElement = document.getElementById('time');
-                var temperatureElement = document.getElementById('temperature');
+                const times = data.hourly.time;
+                const temperatures = data.hourly.temperature_2m;
+                const timeWeatherDiv = document.getElementById('timeWeather');
 
-                timeElement.innerHTML = '';
+                timeWeatherDiv.innerHTML = '';
 
-                if (times && times.length > 0) {
-                    times.forEach(time => {
-                        var hour = new Date(time).getHours();
-                        var minutes = new Date(time).getMinutes();
-                        if (minutes === 0) {
-                            minutes = "00";
-                        }
-                        var formattedTime = hour + ":" + minutes
-                        var timeDiv = Object.assign(document.createElement('div'), {
-                            className: 'time', innerText: formattedTime
-                        });
-                        timeElement.appendChild(timeDiv);
+                times.forEach((time, index) => {
+                    const hour = new Date(time).getHours();
+                    let minutes = new Date(time).getMinutes();
+                    if (minutes === 0) {
+                        minutes = "00";
+                    }
+                    const formattedTime = hour + ":" + minutes
+
+                    const itemDiv = Object.assign(document.createElement('div'), {
+                        className: 'item'
                     });
-                }
-            })
+
+                    const temperatureDiv = Object.assign(document.createElement('div'), {
+                        className: 'temperature', innerText: temperatures[index] + '°C'
+                    });
+
+                    const timeDiv = Object.assign(document.createElement('div'), {
+                        className: 'time', innerText: formattedTime
+                    });
+
+                    itemDiv.appendChild(temperatureDiv);
+                    itemDiv.appendChild(timeDiv);
+                    timeWeatherDiv.appendChild(itemDiv);
+                });
+            });
     }
 
     map.on('click', onMapClick);
