@@ -2,10 +2,61 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-#map {
-  height: 400px;
+body {
+  max-height: 100dvh;
+  overflow: hidden;
+  background: #9dbde3;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100dvh;
+}
+main .weather {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.8rem;
+}
+main .weather i {
+  font-size: 3rem;
+}
+main .time_weather {
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.8rem;
+  gap: 12px;
+  padding: 20px;
+}
+main .time_weather #time {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+main .map {
+  height: 70dvh;
+  width: 200dvw;
+  background: #415d3b;
+  border-radius: 50% 50% 0 0;
+  transform: translateX(-25%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main .map #map {
+  height: 50dvh;
+  width: 50dvw;
 }
 
 /*# sourceMappingURL=styles.css.map */
