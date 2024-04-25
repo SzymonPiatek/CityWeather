@@ -1,3 +1,6 @@
+$background-color: #9dbde3;
+$second-color: #466345;
+
 * {
   margin: 0;
   padding: 0;
@@ -8,45 +11,47 @@
 body {
   max-height: 100dvh;
   overflow: hidden;
-  background: #9dbde3;
+  background: $background-color;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100dvh;
   .weather {
     flex: 1;
     display: flex;
-    justify-content: center;
     align-items: center;
-    flex-direction: column;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    .side {
+      width: 50dvw;
+      gap: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: column;
+      &.text {
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
     i {
-      font-size: 3rem;
+      font-size: 12rem;
     }
   }
-  .time_weather {
-    height: fit-content;
+  #timeWeather {
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
     font-size: 1.8rem;
-    gap: 12px;
-    padding: 20px;
-    #time {
-      width: fit-content;
-      display: flex;
-      align-items: center;
-      gap: 20px;
+    .item {
+      min-width: fit-content;
+      padding: 12px;
     }
   }
   .map {
-    height: 70dvh;
+    height: 60dvh;
     width: 200dvw;
-    background: #415d3b;
+    background: $second-color;
     border-radius: 50% 50% 0 0;
     transform: translateX(-25%);
     display: flex;
