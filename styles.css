@@ -57,8 +57,9 @@ main .map {
   align-items: center;
 }
 main .map #map {
-  height: 50dvh;
-  width: 50dvw;
+  border-radius: 50% 50% 0 0;
+  height: 60dvh;
+  width: 200dvw;
 }
 
 /*# sourceMappingURL=styles.css.map */
