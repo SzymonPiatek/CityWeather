@@ -18,11 +18,22 @@
 <body>
     <main>
         <div class="weather">
-            <div class="image" id="image"><i class="fa-solid fa-cloud-sun"></i></div>
-            <div class="text" id="text">0℃</div>
-            <div class="city" id="city">Nie wybrano</div>
-            <div class="date" id="date"></div>
-            <div class="weekday" id="weekday"></div>
+            <div id="image"><i class="fa-solid fa-cloud-sun"></i></div>
+            <div id="city">Nie wybrano</div>
+            <div id="date"></div>
+            <div id="weekday"></div>
+        </div>
+        <div class="time_weather">
+            <div id="temperature">
+                <div class="temperature">
+                    10C
+                </div>
+            </div>
+            <div id="time">
+                <div class="time">
+                    12:00
+                </div>
+            </div>
         </div>
         <div class="map">
             <div id="map"></div>
@@ -64,9 +75,9 @@
 
     function onMapClick(e) {
         var latlng = e.latlng;
-        var url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
+        var city_url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
 
-        fetch(url)
+        fetch(city_url)
             .then(response => response.json())
             .then(data => {
                 var city = data.address.city;
@@ -74,6 +85,38 @@
                     city = data.address.town || data.address.village || data.address.hamlet;
                 }
                 cityElement.textContent = city || "Nie wybrano";
+            })
+
+        var weather_url = 'https://api.open-meteo.com/v1/forecast';
+        var latitude = 'latitude=' + latlng.lat;
+        var longitude = 'longitude=' + latlng.lng;
+        var hourly = 'hourly=temperature_2m';
+        var complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly;
+
+        fetch(complete_weather_url)
+            .then(response => response.json())
+            .then(data => {
+                var times = data.hourly.time;
+                var temperatures = data.hourly.temperature_2m;
+                var timeElement = document.getElementById('time');
+                var temperatureElement = document.getElementById('temperature');
+
+                timeElement.innerHTML = '';
+
+                if (times && times.length > 0) {
+                    times.forEach(time => {
+                        var hour = new Date(time).getHours();
+                        var minutes = new Date(time).getMinutes();
+                        if (minutes === 0) {
+                            minutes = "00";
+                        }
+                        var formattedTime = hour + ":" + minutes
+                        var timeDiv = Object.assign(document.createElement('div'), {
+                            className: 'time', innerText: formattedTime
+                        });
+                        timeElement.appendChild(timeDiv);
+                    });
+                }
             })
     }
 
