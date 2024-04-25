@@ -73,7 +73,7 @@
                 if (!city) {
                     city = data.address.town || data.address.village || data.address.hamlet;
                 }
-                cityElement.textContent = city;
+                cityElement.textContent = city || "Nie wybrano";
             })
     }
 

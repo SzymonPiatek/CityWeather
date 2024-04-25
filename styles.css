@@ -23,6 +23,10 @@ main .weather {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-size: 1.8rem;
+}
+main .weather .image i {
+  font-size: 3rem;
 }
 main .map {
   height: 70dvh;
