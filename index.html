@@ -16,19 +16,45 @@
     <script src="https://kit.fontawesome.com/d55684f920.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="weather-container">
+    <main>
         <div class="weather">
-            <div class="image" id="image"></div>
-            <div class="text" id="text"></div>
+            <div class="image" id="image"><i class="fa-solid fa-cloud-sun"></i></div>
+            <div class="text" id="text">0℃</div>
             <div class="city" id="city">Nie wybrano</div>
             <div class="date" id="date"></div>
+            <div class="weekday" id="weekday"></div>
         </div>
-    </div>
-    <div class="map-container">
-        <div id="map"></div>
-    </div>
+        <div class="map">
+            <div id="map"></div>
+        </div>
+    </main>
 </body>
 <script>
+<!--  TodayDate  -->
+    function formatDate(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        return day + "." + month + "." + year;
+    }
+
+    function getPolishDayOfWeek(date) {
+        var options = { weekday: 'long', timeZone: 'UTC', locale: 'pl-PL' };
+        return date.toLocaleDateString('pl-PL', options);
+    }
+
+    var today = new Date();
+    var formatted_today = formatDate(today);
+    var weekday = getPolishDayOfWeek(today);
+    var dateElement = document.getElementById('date');
+    var weekdayElement = document.getElementById('weekday');
+
+    dateElement.textContent = formatted_today;
+    weekdayElement.textContent = weekday;
+
+    console.log(formatted_today);
+<!--  Map  -->
     var map = L.map('map').setView([52, 19], 7);
     var cityElement = document.getElementById('city');
 
