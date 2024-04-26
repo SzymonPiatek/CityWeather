@@ -85,7 +85,8 @@
         const latitude = 'latitude=' + latlng.lat;
         const longitude = 'longitude=' + latlng.lng;
         const hourly = 'hourly=temperature_2m';
-        const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly;
+        const timezone = 'timezone=Europe%2FBerlin';
+        const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly + "&" + timezone;
 
         fetch(complete_weather_url)
             .then(response => response.json())

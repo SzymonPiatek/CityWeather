@@ -1,4 +1,4 @@
-$background-color: #9dbde3;
+$background-color: #99b3ce;
 $second-color: #466345;
 
 * {
@@ -59,6 +59,7 @@ main {
     align-items: center;
     #map {
       border-radius: 50% 50% 0 0;
+      border-top: 2px #000 solid;
       height: 60dvh;
       width: 200dvw;
     }
