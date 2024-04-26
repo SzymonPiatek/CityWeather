@@ -1,5 +1,5 @@
 $background-color: #99b3ce;
-$second-color: #466345;
+$second-color: #AAD3DF;
 
 * {
   margin: 0;
@@ -47,6 +47,7 @@ main {
     justify-content: center;
     align-items: center;
     #map {
+      background: $second-color;
       border-radius: 50% 50% 0 0;
       border-top: 2px #000 solid;
       height: 60dvh;

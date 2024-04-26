@@ -38,7 +38,7 @@ main .weather i {
 main .map {
   height: 60dvh;
   width: 200dvw;
-  background: #466345;
+  background: #AAD3DF;
   border-radius: 50% 50% 0 0;
   transform: translateX(-25%);
   display: flex;
@@ -46,6 +46,7 @@ main .map {
   align-items: center;
 }
 main .map #map {
+  background: #AAD3DF;
   border-radius: 50% 50% 0 0;
   border-top: 2px #000 solid;
   height: 60dvh;
