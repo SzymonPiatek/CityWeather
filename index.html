@@ -21,16 +21,11 @@
             <div class="side">
                 <div id="image"><i class="fa-solid fa-cloud-sun"></i></div>
             </div>
+            <div class="side" id="timeWeather"></div>
             <div class="side text">
                 <div id="city">Nie wybrano</div>
                 <div id="date"></div>
                 <div id="weekday"></div>
-            </div>
-        </div>
-        <div class="time_weather" id="timeWeather">
-            <div class="item">
-                <div class="temperature">0°C</div>
-                <div class="time">12:00</div>
             </div>
         </div>
         <div class="map">
@@ -39,6 +34,26 @@
     </main>
 </body>
 <script>
+    function initMap(lat, lng) {
+        const map = L.map('map').setView([lat, lng], 7);
+        map.setMinZoom(3);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const southWest = L.latLng(-90, -180);
+        const northEast = L.latLng(90, 180);
+        const bounds = L.latLngBounds(southWest, northEast);
+
+        map.setMaxBounds(bounds);
+        map.on('drag', function() {
+            map.panInsideBounds(bounds, { animate: false });
+        });
+        map.on('click', onMapClick);
+        return map;
+    }
+
     function formatDate(date) {
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -60,16 +75,14 @@
     dateElement.textContent = formatted_today;
     weekdayElement.textContent = weekday;
 
-    const map = L.map('map').setView([52, 19], 7);
+    // Weather
     const cityElement = document.getElementById('city');
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    let map;
 
     function onMapClick(e) {
         const latlng = e.latlng;
-        const city_url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
+        const map_url = 'https://nominatim.openstreetmap.org'
+        const city_url = map_url + '/reverse?format=jsonv2&lat=' + latlng.lat + '&lon=' + latlng.lng;
 
         fetch(city_url)
             .then(response => response.json())
@@ -84,45 +97,57 @@
         const weather_url = 'https://api.open-meteo.com/v1/forecast';
         const latitude = 'latitude=' + latlng.lat;
         const longitude = 'longitude=' + latlng.lng;
-        const hourly = 'hourly=temperature_2m';
-        const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" + hourly;
+        const currentTemperature = 'current=temperature_2m';
+        const timezone = 'timezone=Europe%2FBerlin';
+        const forecast = 'forecast_days=1';
+        const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" +
+            currentTemperature + "&" + timezone + "&" + forecast;
 
         fetch(complete_weather_url)
             .then(response => response.json())
             .then(data => {
-                const times = data.hourly.time;
-                const temperatures = data.hourly.temperature_2m;
                 const timeWeatherDiv = document.getElementById('timeWeather');
+                const time = data.current.time;
+                const temperature = data.current.temperature_2m + data.current_units.temperature_2m;
 
                 timeWeatherDiv.innerHTML = '';
 
-                times.forEach((time, index) => {
-                    const hour = new Date(time).getHours();
-                    let minutes = new Date(time).getMinutes();
-                    if (minutes === 0) {
-                        minutes = "00";
-                    }
-                    const formattedTime = hour + ":" + minutes
+                const hour = new Date(time).getHours();
+                let minutes = new Date(time).getMinutes();
+                if (minutes === 0) {
+                    minutes = "00";
+                }
+                const formattedTime = hour + ":" + minutes
 
-                    const itemDiv = Object.assign(document.createElement('div'), {
-                        className: 'item'
-                    });
-
-                    const temperatureDiv = Object.assign(document.createElement('div'), {
-                        className: 'temperature', innerText: temperatures[index] + '°C'
-                    });
-
-                    const timeDiv = Object.assign(document.createElement('div'), {
-                        className: 'time', innerText: formattedTime
-                    });
-
-                    itemDiv.appendChild(temperatureDiv);
-                    itemDiv.appendChild(timeDiv);
-                    timeWeatherDiv.appendChild(itemDiv);
+                const temperatureDiv = Object.assign(document.createElement('div'), {
+                    className: 'temperature', innerText: temperature
                 });
+                const timeDiv = Object.assign(document.createElement('div'), {
+                    className: 'time', innerText: formattedTime
+                });
+
+                timeWeatherDiv.appendChild(temperatureDiv);
+                timeWeatherDiv.appendChild(timeDiv);
             });
     }
 
-    map.on('click', onMapClick);
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const userLatitude = position.coords.latitude;
+                const userLongitude = position.coords.longitude;
+                map = initMap(userLatitude, userLongitude);
+                onMapClick({ latlng: { lat: userLatitude, lng: userLongitude } });
+            }, function(error) {
+                map = initMap(52, 21);
+                onMapClick({ latlng: { lat: 52, lng: 21 } });
+            });
+        } else {
+            map = initMap(52, 21);
+            onMapClick({ latlng: { lat: 52, lng: 21 } });
+        }
+    }
+
+    getUserLocation();
 </script>
 </html>

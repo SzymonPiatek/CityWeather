@@ -8,7 +8,7 @@
 body {
   max-height: 100dvh;
   overflow: hidden;
-  background: #9dbde3;
+  background: #99b3ce;
 }
 
 main {
@@ -23,33 +23,22 @@ main .weather {
   font-size: 2rem;
 }
 main .weather .side {
-  width: 50dvw;
+  width: 33.3333333333dvw;
   gap: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-}
-main .weather .side.text {
+  font-size: 3rem;
   font-weight: bold;
-  text-transform: uppercase;
 }
 main .weather i {
-  font-size: 12rem;
-}
-main #timeWeather {
-  display: flex;
-  justify-content: center;
-  font-size: 1.8rem;
-}
-main #timeWeather .item {
-  min-width: fit-content;
-  padding: 12px;
+  font-size: 16rem;
 }
 main .map {
   height: 60dvh;
   width: 200dvw;
-  background: #466345;
+  background: #AAD3DF;
   border-radius: 50% 50% 0 0;
   transform: translateX(-25%);
   display: flex;
@@ -57,7 +46,9 @@ main .map {
   align-items: center;
 }
 main .map #map {
+  background: #AAD3DF;
   border-radius: 50% 50% 0 0;
+  border-top: 2px #000 solid;
   height: 60dvh;
   width: 200dvw;
 }
