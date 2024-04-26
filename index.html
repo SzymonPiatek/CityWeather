@@ -116,6 +116,23 @@
             });
     }
 
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const userLatitude = position.coords.latitude;
+                const userLongitude = position.coords.longitude;
+                const userCoordinates = { lat: userLatitude, lng: userLongitude };
+                onMapClick({ latlng: userCoordinates });
+            }, function(error) {
+                onMapClick({ latlng: { lat: 52.2297, lng: 21.0122 } });
+            });
+        } else {
+            onMapClick({ latlng: { lat: 52.2297, lng: 21.0122 } });
+        }
+    }
+
+    getUserLocation();
+
     map.on('click', onMapClick);
 </script>
 </html>
