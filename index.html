@@ -19,7 +19,7 @@
     <main>
         <div class="weather">
             <div class="side">
-                <div id="image"><i class="fa-solid fa-cloud-sun"></i></div>
+                <div id="image"></div>
             </div>
             <div class="side" id="timeWeather"></div>
             <div class="side text">
@@ -102,6 +102,7 @@
         const forecast = 'forecast_days=1';
         const complete_weather_url = weather_url + "?" + latitude + "&" + longitude + "&" +
             currentTemperature + "&" + timezone + "&" + forecast;
+        const iconDiv = document.getElementById('image');
 
         fetch(complete_weather_url)
             .then(response => response.json())
@@ -122,6 +123,24 @@
                 const temperatureDiv = Object.assign(document.createElement('div'), {
                     className: 'temperature', innerText: temperature
                 });
+
+                let parsedTemperature = parseFloat(data.current.temperature_2m);
+                iconDiv.innerHTML = '';
+
+                if (parsedTemperature <= 0) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-empty"></i>`;
+                } else if (parsedTemperature > 0 && parsedTemperature <= 10) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-quarter"></i>`;
+                } else if (parsedTemperature > 10 && parsedTemperature <= 15) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-half"></i>`;
+                } else if (parsedTemperature > 15 && parsedTemperature <= 25) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-three-quarters"></i>`;
+                } else if (parsedTemperature > 25 && parsedTemperature <= 30) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-full"></i>`;
+                } else if (parsedTemperature > 30) {
+                    iconDiv.innerHTML = `<i class="fa-solid fa-temperature-high"></i>`;
+                }
+
                 const timeDiv = Object.assign(document.createElement('div'), {
                     className: 'time', innerText: formattedTime
                 });
