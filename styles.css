@@ -8,7 +8,8 @@
 body {
   max-height: 100dvh;
   overflow: hidden;
-  background: #99b3ce;
+  background-image: url("img/background.jpg");
+  background-size: cover;
 }
 
 main {
@@ -21,6 +22,10 @@ main .weather {
   display: flex;
   align-items: center;
   font-size: 2rem;
+}
+main .weather * {
+  color: #fff;
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 main .weather .side {
   width: 33.3333333333dvw;

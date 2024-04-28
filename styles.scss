@@ -11,7 +11,8 @@ $second-color: #AAD3DF;
 body {
   max-height: 100dvh;
   overflow: hidden;
-  background: $background-color;
+  background-image: url("img/background.jpg");
+  background-size: cover;
 }
 
 main {
@@ -23,6 +24,14 @@ main {
     display: flex;
     align-items: center;
     font-size: 2rem;
+    * {
+      color: #fff;
+      text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #000,
+        -2px  2px 0 #000,
+         2px  2px 0 #000;
+    }
     .side {
       width: calc(1/3 * 100dvw);
       gap: 20px;
